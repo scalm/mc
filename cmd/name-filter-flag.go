@@ -18,7 +18,11 @@
 package cmd
 
 // NB. Since go 1.16 go-flags have "Func" and it might help to reduce code but go 1.12 specified in the package "cli"
-import "github.com/minio/cli"
+import (
+	"strings"
+
+	"github.com/minio/cli"
+)
 
 // nameFiltersFlagValue is a type for []nameFilter to satisfy flag.Value and flag.Getter
 // We have multiple flag values refers to this slice,
@@ -98,6 +102,19 @@ func newIncludeWildcardFilterFlag(name string, usage string, flagValue *nameFilt
 			flagValue,
 			func(pattern string) (nameFilter, error) {
 				return includeWildcardFilter{pattern}, nil
+			}},
+	}
+}
+
+func newIncludeListFilterFlag(name string, usage string, flagValue *nameFiltersFlagValue) *cli.GenericFlag {
+	// We do not have the special function in the package 'cli' to create a typed flag, so we use a generic type
+	return &cli.GenericFlag{
+		Name:  name,
+		Usage: usage,
+		Value: &nameFilterTypeMapper{
+			flagValue,
+			func(pattern string) (nameFilter, error) {
+				return newIncludeListFilter(strings.Split(pattern, ",")), nil
 			}},
 	}
 }

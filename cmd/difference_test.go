@@ -90,6 +90,20 @@ var testCases = []struct {
 		excludeWildcardFilter{"*.log"},
 		includeWildcardFilter{"important*.zip"},
 	}, "important.zip", false},
+
+	// select all except zips and logs but select important zips
+	{[]nameFilter{
+		excludeWildcardFilter{"*"},
+		newIncludeListFilter([]string{"backup.zip", "another.zip"}),
+	}, "backup.zip", false},
+	{[]nameFilter{
+		excludeWildcardFilter{"*"},
+		newIncludeListFilter([]string{"backup.zip", "another.zip"}),
+	}, "another.zip", false},
+	{[]nameFilter{
+		excludeWildcardFilter{"*"},
+		newIncludeListFilter([]string{"backup.zip", "another.zip"}),
+	}, "skip.zip", true},
 }
 
 func TestExcludeOptions(t *testing.T) {

@@ -105,6 +105,11 @@ var (
 			"include object(s) that match specified object name pattern",
 			&nameFiltersValue,
 		),
+		newIncludeListFilterFlag(
+			"include-list",
+			"include object(s) that match specified list. Separator ','",
+			&nameFiltersValue,
+		),
 		cli.StringFlag{
 			Name:  "older-than",
 			Usage: "filter object(s) older than L days, M hours and N minutes",

@@ -81,3 +81,26 @@ func (f excludeWildcardFilter) filter(name string, included bool) (includeAfter 
 func (f excludeWildcardFilter) String() string {
 	return fmt.Sprintf("{exclude \"%s\"}", f.pattern)
 }
+
+type includeListFilter struct {
+	fileNames []string
+	seekMap   map[string]bool
+}
+
+func newIncludeListFilter(fileNames []string) includeListFilter {
+	seekMap := make(map[string]bool, len(fileNames))
+	for _, fileName := range fileNames {
+		seekMap[fileName] = true
+	}
+
+	return includeListFilter{fileNames, seekMap}
+}
+
+func (f includeListFilter) filter(name string, included bool) (includeAfter bool) {
+	if included {
+		return true
+	}
+
+	_, found := f.seekMap[name]
+	return found
+}
