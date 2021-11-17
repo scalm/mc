@@ -110,6 +110,11 @@ var (
 			"include object(s) that match specified list. Separator ','",
 			&nameFiltersValue,
 		),
+		newIncludeFileListFilterFlag(
+			"include-file",
+			"include the file, each line of which contains then name of the object to include",
+			&nameFiltersValue,
+		),
 		cli.StringFlag{
 			Name:  "older-than",
 			Usage: "filter object(s) older than L days, M hours and N minutes",

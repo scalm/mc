@@ -18,7 +18,9 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 
 	"github.com/minio/pkg/wildcard"
 )
@@ -103,4 +105,27 @@ func (f includeListFilter) filter(name string, included bool) (includeAfter bool
 
 	_, found := f.seekMap[name]
 	return found
+}
+
+func newIncludeFileListFilter(fileName string) (*includeListFilter, error) {
+	file, err := os.Open(fileName)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	seekMap := make(map[string]bool)
+	for scanner.Scan() {
+		fileName := scanner.Text()
+		seekMap[fileName] = true
+	}
+
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+
+	return &includeListFilter{nil, seekMap}, nil
 }

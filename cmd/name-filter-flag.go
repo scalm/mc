@@ -118,3 +118,17 @@ func newIncludeListFilterFlag(name string, usage string, flagValue *nameFiltersF
 			}},
 	}
 }
+
+func newIncludeFileListFilterFlag(name string, usage string, flagValue *nameFiltersFlagValue) *cli.GenericFlag {
+	// We do not have the special function in the package 'cli' to create a typed flag, so we use a generic type
+	return &cli.GenericFlag{
+		Name:  name,
+		Usage: usage,
+		Value: &nameFilterTypeMapper{
+			flagValue,
+			func(pattern string) (nameFilter, error) {
+				filter, err := newIncludeFileListFilter(pattern)
+				return *filter, err
+			}},
+	}
+}
